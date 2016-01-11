@@ -4,7 +4,6 @@ import wx.lib.scrolledpanel
 import i3ipc
 import math
 import os
-import shutil
 
 class ColourClass:
 	def __init__(self,border,background,text,indicator=None):
@@ -69,6 +68,7 @@ class MainWindow(wx.Frame):
 		toolSave = toolbar.AddTool(wx.ID_ANY, 'Save', artprovider.GetBitmap(wx.ART_FILE_SAVE,size=wx.Size(24,24)),"Save the current settings to the open file")
 		toolApply = toolbar.AddTool(wx.ID_ANY, 'Apply', artprovider.GetBitmap(wx.ART_TICK_MARK,size=wx.Size(24,24)),"Apply the changes without changing file")
 		toolUpdateLocal = toolbar.AddTool(wx.ID_ANY, 'Save to config', artprovider.GetBitmap(wx.ART_FILE_SAVE_AS,size=wx.Size(24,24)),"Save the current colour scheme into your current config")
+		toolSnippet = toolbar.AddTool(wx.ID_ANY, 'Create colour snippet', artprovider.GetBitmap(wx.ART_NEW,size=wx.Size(24,24)),"Save the current colour scheme as a standalone colour file you can send to others")
 		toolbar.AddStretchableSpace()
 		toolQuit = toolbar.AddTool(wx.ID_ANY, 'Quit', artprovider.GetBitmap(wx.ART_QUIT,size=wx.Size(24,24)),"Quit the program")
 
@@ -77,6 +77,7 @@ class MainWindow(wx.Frame):
 		self.Bind(wx.EVT_TOOL, self.OnApply,toolApply)
 		self.Bind(wx.EVT_TOOL, self.OnSave,toolSave)
 		self.Bind(wx.EVT_TOOL, self.OnUpdateLocal,toolUpdateLocal)
+		self.Bind(wx.EVT_TOOL, self.OnCreateSnippet,toolSnippet)
 
 		self.scrolled = wx.lib.scrolledpanel.ScrolledPanel(self,-1)
 		self.scrolled.SetupScrolling()
@@ -216,6 +217,15 @@ class MainWindow(wx.Frame):
 			os.system("rm '"+os.path.expanduser('~/.i3/config')+"'")
 			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
 			i3ipc.Connection().command("reload")
+
+	def OnCreateSnippet(self,event):
+		openFileDialog = wx.FileDialog(self, "Save i3 Colour snippet file", os.path.expanduser("~/.i3/"), "","i3 Colour snippet file |*", wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+		if openFileDialog.ShowModal() == wx.ID_CANCEL:
+			return
+		open(openFileDialog.GetPath(), 'w').close()
+		self.config.updateConfig(openFileDialog.GetPath())
+		os.system("rm '"+openFileDialog.GetPath()+"'")
+		os.system("mv '/tmp/i3tmpconf' '"+openFileDialog.GetPath()+"'")
 
 class Messager:
 	def __init__(self,level,silencelevel,frame,log=False,logname="./i3colourchanger.log"):
@@ -390,7 +400,6 @@ class Config:
 						tmp.write(colourClassName+" #"+self.colorToHex(colourClass.border)+" #"+self.colorToHex(colourClass.background)+" #"+self.colorToHex(colourClass.text)+" #"+self.colorToHex(colourClass.indicator)+"\n")
 					if "client.background" not in writtenColours:
 						tmp.write("client.background #"+self.colorToHex(self.background)+"\n")
-		#shutil.copy2("/tmp/i3tmpconf",filename)
 
 app = wx.App()
 mainWindow = MainWindow(None)

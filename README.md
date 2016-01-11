@@ -4,4 +4,11 @@ The i3 Colour changer applet was created after frustration with editing i3 confi
 1. Easy colour selections for *all* colours in the i3 config, including i3bar
 2. Try out changes before saving your config
 3. Open other config files and try them out to see if you like them
-4. By creating an empty file and opening that you can create a colour profile snippet. It will by default contain all the default i3 colours and as you change them it will only contain colour data. This file can then be read by others using the program without having to change any of their other settings.
+4. Save colour configs to snippets which can be shared and applied by others without having to tamper with their other settings
+
+## Dependencies
+This program is written in Python 3 by using the wxPython Phoenix project for GUI. Other packages which must be installed includes:
+1. colour
+2. i3ipc
+3. math
+4. os
