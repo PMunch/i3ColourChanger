@@ -68,6 +68,7 @@ class MainWindow(wx.Frame):
 		toolOpen = toolbar.AddTool(wx.ID_ANY, 'Open', artprovider.GetBitmap(wx.ART_FILE_OPEN,size=wx.Size(24,24)),"Open an i3 config file")
 		toolSave = toolbar.AddTool(wx.ID_ANY, 'Save', artprovider.GetBitmap(wx.ART_FILE_SAVE,size=wx.Size(24,24)),"Save the current settings to the open file")
 		toolApply = toolbar.AddTool(wx.ID_ANY, 'Apply', artprovider.GetBitmap(wx.ART_TICK_MARK,size=wx.Size(24,24)),"Apply the changes without changing file")
+		toolUpdateLocal = toolbar.AddTool(wx.ID_ANY, 'Save to config', artprovider.GetBitmap(wx.ART_FILE_SAVE_AS,size=wx.Size(24,24)),"Save the current colour scheme into your current config")
 		toolbar.AddStretchableSpace()
 		toolQuit = toolbar.AddTool(wx.ID_ANY, 'Quit', artprovider.GetBitmap(wx.ART_QUIT,size=wx.Size(24,24)),"Quit the program")
 
@@ -75,6 +76,7 @@ class MainWindow(wx.Frame):
 		self.Bind(wx.EVT_TOOL, self.OnOpen,toolOpen)
 		self.Bind(wx.EVT_TOOL, self.OnApply,toolApply)
 		self.Bind(wx.EVT_TOOL, self.OnSave,toolSave)
+		self.Bind(wx.EVT_TOOL, self.OnUpdateLocal,toolUpdateLocal)
 
 		self.scrolled = wx.lib.scrolledpanel.ScrolledPanel(self,-1)
 		self.scrolled.SetupScrolling()
@@ -196,17 +198,24 @@ class MainWindow(wx.Frame):
 	def OnApply(self, event):
 		if self.config != None:
 			self.config.updateConfig(os.path.expanduser('~/.i3/config'))
-			os.system("mv "+os.path.expanduser('~/.i3/config')+" /tmp/i3bacconfig")
-			os.system("mv /tmp/i3tmpconf "+os.path.expanduser('~/.i3/config'))
+			os.system("mv '"+os.path.expanduser('~/.i3/config')+"' '/tmp/i3bacconfig'")
+			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
 			i3ipc.Connection().command("reload")
-			os.system("rm "+os.path.expanduser('~/.i3/config'))
-			os.system("mv /tmp/i3bacconfig "+os.path.expanduser('~/.i3/config'))
+			os.system("rm '"+os.path.expanduser('~/.i3/config')+"'")
+			os.system("mv '/tmp/i3bacconfig' '"+os.path.expanduser('~/.i3/config')+"'")
 
 	def OnSave(self,event):
 		if self.config != None:
 			self.config.updateConfig()
-			os.system("mv "+self.config.openFilename+" /tmp/i3bacconfig")
-			os.system("mv /tmp/i3tmpconf "+self.config.openFilename)
+			os.system("mv '"+self.config.openFilename+"' '/tmp/i3bacconfig'")
+			os.system("mv '/tmp/i3tmpconf' '"+self.config.openFilename+"'")
+
+	def OnUpdateLocal(self,event):
+		if self.config != None and os.path.isfile(os.path.expanduser('~/.i3/config')):
+			self.config.updateConfig(os.path.expanduser('~/.i3/config'))
+			os.system("rm '"+os.path.expanduser('~/.i3/config')+"'")
+			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
+			i3ipc.Connection().command("reload")
 
 class Messager:
 	def __init__(self,level,silencelevel,frame,log=False,logname="./i3colourchanger.log"):
@@ -372,6 +381,8 @@ class Config:
 							writtenColours.append("client.background")
 						else:
 							tmp.write(line)
+				if writtenBar==False:
+					tmp.write("bar {\n"+self.createBarBlock()+"}")
 				if len(writtenColours)!=len(self.colourClasses)+1:
 					tmp.write("\n\n#Colours not previously found in file:\n")
 					for colourClassName in [item for item in self.colourClasses if item not in writtenColours]:

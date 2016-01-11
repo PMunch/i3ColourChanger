@@ -1,0 +1,20 @@
+bar {
+	colors {
+		background #000000
+		statusline #FFFFFF
+		separator #666666
+		active_workspace #333333 #5F676B #FFFFFF
+		binding_mode #2F343A #900000 #FFFFFF
+		urgent_workspace #2F343A #900000 #FFFFFF
+		inactive_workspace #333333 #222222 #888888
+		focused_workspace #4C7899 #285578 #FFFFFF
+	}
+}
+
+#Colours not previously found in file:
+client.unfocused #333333 #222222 #888888 #292E2F
+client.placeholder #000000 #0C0C0C #FFFFFF #000000
+client.urgent #2F343A #900000 #FFFFFF #900000
+client.focused_inactive #333333 #5F676B #FFFFFF #484E50
+client.focused #4C7899 #285578 #FFFFFF #2E9EF5
+client.background #FFFFFF
