@@ -5,6 +5,7 @@ The i3 Colour changer applet was created after frustration with editing i3 confi
 2. Try out changes before saving your config
 3. Open other config files and try them out to see if you like them
 4. Save colour configs to snippets which can be shared and applied by others without having to tamper with their other settings
+5. Use and create named colours for easier colour scheme creation
 
 ## Dependencies
 This program is written in Python 3 by using the [wxPython Phoenix](http://wiki.wxpython.org/How%20to%20install%20wxPython#Installing_wxPython-Phoenix_using_pip) project for GUI. Other packages which must be installed includes:
@@ -12,3 +13,4 @@ This program is written in Python 3 by using the [wxPython Phoenix](http://wiki.
 * [i3ipc](https://github.com/acrisci/i3ipc-python) 
 * math
 * os
+* string
