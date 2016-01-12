@@ -260,7 +260,7 @@ class MainWindow(wx.Frame):
 			name = "colourVariable"+str(i)
 		name = "$"+name
 		self.config.setColourChanged(openColourDialog.GetColourData(),name)
-		self.LoadConfig(cfg)
+		self.LoadConfig(self.config)
 
 
 	def OnColourChange(self,event,pickerId=0,colourClass=None,name=None,i3bar=False):
