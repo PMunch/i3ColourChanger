@@ -1,5 +1,8 @@
 # i3 Colour Changer
 The i3 Colour changer applet was created after frustration with editing i3 config files. Copying and pasting hex color codes are annoying and remembering where to put them is a chore. In i3 Colour changer you can load you existing config file and edit the colours to you liking. Hit apply to try out new changes without having to swap config files and click save once you are happy with the result (your actual config won't change until you do).
+
+![alt text](https://raw.githubusercontent.com/PMunch/i3ColourChanger/master/screenshot.png "Screenshot showing the various features")
+
 ## Features
 1. Easy colour selections for *all* colours in the i3 config, including i3bar
 2. Try out changes before saving your config
