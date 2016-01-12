@@ -98,7 +98,8 @@ class MainWindow(wx.Frame):
 			fgs = wx.FlexGridSizer(math.ceil(len(config.setColours)/2),6,15,25)
 			for setColour in sorted(config.setColours):
 				fgs.Add(wx.StaticText(self.scrolled,label=setColour[1:]))
-				cp = wx.ColourPickerCtrl(self.scrolled,colour=config.setColours[setColour].hex)
+				colour = config.setColours[setColour]
+				cp = wx.ColourPickerCtrl(self.scrolled,colour=(config.setColours[colour].hex if type(colour) != Color else colour.hex))
 				self.Bind(wx.EVT_COLOURPICKER_CHANGED,lambda e, name=setColour:self.SetColourChanged(e,name) ,cp)
 				fgs.Add(cp)
 				b = wx.BitmapButton(self.scrolled,bitmap=wx.ArtProvider().GetBitmap(wx.ART_DELETE))
@@ -134,7 +135,7 @@ class MainWindow(wx.Frame):
 			for label in ["Border","Background","Text","Indicator"]:
 				colour = config.colourClasses[colourClass].namedColour(label)
 				fgs.Add(wx.StaticText(sb,label=label),0,0)
-				cp = wx.ColourPickerCtrl(sb,colour=colour if type(colour) != Color else colour.hex)
+				cp = wx.ColourPickerCtrl(sb,colour=(config.setColours[colour].hex if type(colour) != Color else colour.hex))
 				self.Bind(wx.EVT_COLOURPICKER_CHANGED,lambda e, colourClass=colourClass,name=label:config.colourClassChanged(e,colourClass,name),cp)
 				fgs.Add(cp,0,0)
 				cb = wx.ComboBox(sb,value="Individual colour" if type(colour) == Color else colour[1:],choices=["Individual colour"]+sorted(map(lambda n: n[1:],list(config.setColours.keys()))))
@@ -157,7 +158,7 @@ class MainWindow(wx.Frame):
 			fgs.Add(wx.StaticText(self.scrolled,label=label),0,0)
 			
 			colour = config.i3bar.namedColour(label)
-			cp = wx.ColourPickerCtrl(self.scrolled,colour=colour if type(colour) != Color else colour.hex)
+			cp = wx.ColourPickerCtrl(self.scrolled,colour=(config.setColours[colour].hex if type(colour) != Color else colour.hex))
 			self.Bind(wx.EVT_COLOURPICKER_CHANGED,lambda e, name=label:config.i3barChanged(e,name),cp)
 			fgs.Add(cp,0,0)
 			cb = wx.ComboBox(self.scrolled,value="Individual colour" if type(colour) == Color else colour[1:],choices=["Individual colour"]+sorted(map(lambda n: n[1:],list(config.setColours.keys()))))
@@ -177,7 +178,7 @@ class MainWindow(wx.Frame):
 			for label in ["Border","Background","Text"]:
 				fgs.Add(wx.StaticText(sb,label=label),0,0)
 				colour = config.i3bar.colourClasses[colourClass].namedColour(label)
-				cp = wx.ColourPickerCtrl(sb,colour=colour if type(colour) != Color else colour.hex)
+				cp = wx.ColourPickerCtrl(sb,colour=(config.setColours[colour].hex if type(colour) != Color else colour.hex))
 				self.Bind(wx.EVT_COLOURPICKER_CHANGED,lambda e, name=label,c=colourClass:config.colourClassChanged(e,c,name,True),cp)
 				fgs.Add(cp,0,0)
 				cb = wx.ComboBox(sb,value="Individual colour" if type(colour) == Color else colour[1:],choices=["Individual colour"]+sorted(map(lambda n: n[1:],list(config.setColours.keys()))))
@@ -208,7 +209,7 @@ class MainWindow(wx.Frame):
 		if self.config != None:
 			self.config.updateConfig(os.path.expanduser('~/.i3/config'))
 			os.system("mv '"+os.path.expanduser('~/.i3/config')+"' '/tmp/i3bacconfig'")
-			os.system("cp '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
+			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
 			i3ipc.Connection().command("reload")
 			os.system("rm '"+os.path.expanduser('~/.i3/config')+"'")
 			os.system("mv '/tmp/i3bacconfig' '"+os.path.expanduser('~/.i3/config')+"'")
