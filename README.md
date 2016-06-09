@@ -17,6 +17,3 @@ This program is written in Python 3 by using the [wxPython Phoenix](http://wiki.
 * math
 * os
 * string
-* 
-
-[Test IRC link](irc://irc.freenode.net/manjaro-arm)
