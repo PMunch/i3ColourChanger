@@ -207,12 +207,12 @@ class MainWindow(wx.Frame):
 
 	def OnApply(self, event):
 		if self.config != None:
-			self.config.updateConfig(os.path.expanduser('~/.i3/config'))
-			os.system("mv '"+os.path.expanduser('~/.i3/config')+"' '/tmp/i3bacconfig'")
-			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
+			self.config.updateConfig(os.path.expanduser('~/.config/i3/config'))
+			os.system("mv '"+os.path.expanduser('~/.config/i3/config')+"' '/tmp/i3bacconfig'")
+			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.config/i3/config')+"'")
 			i3ipc.Connection().command("reload")
-			os.system("rm '"+os.path.expanduser('~/.i3/config')+"'")
-			os.system("mv '/tmp/i3bacconfig' '"+os.path.expanduser('~/.i3/config')+"'")
+			os.system("rm '"+os.path.expanduser('~/.config/i3/config')+"'")
+			os.system("mv '/tmp/i3bacconfig' '"+os.path.expanduser('~/.config/i3/config')+"'")
 
 	def OnSave(self,event):
 		if self.config != None:
@@ -221,10 +221,10 @@ class MainWindow(wx.Frame):
 			os.system("mv '/tmp/i3tmpconf' '"+self.config.openFilename+"'")
 
 	def OnUpdateLocal(self,event):
-		if self.config != None and os.path.isfile(os.path.expanduser('~/.i3/config')):
-			self.config.updateConfig(os.path.expanduser('~/.i3/config'))
-			os.system("rm '"+os.path.expanduser('~/.i3/config')+"'")
-			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.i3/config')+"'")
+		if self.config != None and os.path.isfile(os.path.expanduser('~/.config/i3/config')):
+			self.config.updateConfig(os.path.expanduser('~/.config/i3/config'))
+			os.system("rm '"+os.path.expanduser('~/.config/i3/config')+"'")
+			os.system("mv '/tmp/i3tmpconf' '"+os.path.expanduser('~/.config/i3/config')+"'")
 			i3ipc.Connection().command("reload")
 
 	def OnCreateSnippet(self,event):
@@ -549,6 +549,6 @@ app = wx.App()
 mainWindow = MainWindow(None)
 mainWindow.messager.Lable(["ERROR","Warning","Info","Debug"])
 mainWindow.messager.Iconify([wx.ICON_ERROR,wx.ICON_EXCLAMATION,wx.ICON_QUESTION,wx.ICON_INFORMATION])
-cfg = Config(mainWindow.messager,os.path.expanduser('~/.i3/config'))
+cfg = Config(mainWindow.messager,os.path.expanduser('~/.config/i3/config'))
 mainWindow.LoadConfig(cfg)
 app.MainLoop()
